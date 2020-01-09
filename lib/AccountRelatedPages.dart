@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -10,8 +8,6 @@ import 'Global.dart';
 import 'Transaction.dart';
 
 class AccountPage extends StatelessWidget {
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   final List<Transaction> _listViewData = Global.instance.recentAccount.transactionsList;
   @override
   Widget build(BuildContext context) {
@@ -158,7 +154,7 @@ class AccountPage extends StatelessWidget {
 }
 
 class PickAccountTypePage extends StatelessWidget {
-  List<String> _listViewData = [];
+  final List<String> _listViewData = [];
   static String chosenType = Account.accountTypes[0];
   @override
   Widget build(BuildContext context) {
@@ -248,7 +244,7 @@ class PickAccountTypePage extends StatelessWidget {
 }
 
 class PickAccountCurrencyPage extends StatelessWidget {
-  List<Currency> _listViewData = [];
+  final List<Currency> _listViewData = [];
   static Currency chosenCurrency = Global.instance.rootCurrency;
 
   @override

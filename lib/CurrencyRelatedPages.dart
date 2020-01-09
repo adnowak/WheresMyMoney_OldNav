@@ -1,12 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:toast/toast.dart';
-import 'package:wheresmymoney_old_nav/AccountRelatedPages.dart';
-import 'Account.dart';
 import 'Currency.dart';
 import 'Global.dart';
-import 'Transaction.dart';
 
 class CurrencyPage extends StatelessWidget {
   @override
@@ -91,7 +87,7 @@ class CurrencyPage extends StatelessWidget {
 }
 
 class PickCurrencyLinkPage extends StatelessWidget{
-  List<Currency> _listViewData = [];
+  final List<Currency> _listViewData = [];
   static Currency chosenCurrency = Global.instance.rootCurrency;
 
   @override
@@ -382,8 +378,8 @@ class PickCurrencyLinkRatioPage extends StatelessWidget{
 }
 
 class PickCurrencyPointPositionPage extends StatelessWidget{
-  List<String> _pointPositions = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"];
-  List<String> _listViewData = ["1","10","100","1000","10000","100000",
+  final List<String> _pointPositions = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"];
+  final List<String> _listViewData = ["1","10","100","1000","10000","100000",
     "1000000","10000000","100000000","1000000000","10000000000","100000000000","1000000000000","10000000000000",
     "100000000000000","1000000000000000","10000000000000000","100000000000000000","1000000000000000000"];
   static String chosenOption;

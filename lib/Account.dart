@@ -34,6 +34,7 @@ class Account
   List<Transaction> get transactionsList => _transactionsList;
 
   Account(this._name, this._currency, this._type){
+    _transactionsList = List<Transaction>();
     this._balance = BigInt.from(0);
   }
 

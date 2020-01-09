@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:toast/toast.dart';
@@ -8,7 +6,6 @@ import 'AccountRelatedPages.dart';
 import 'Currency.dart';
 import 'CurrencyRelatedPages.dart';
 import 'Global.dart';
-import 'Transaction.dart';
 
 BuildContext appContext;
 
@@ -63,7 +60,7 @@ class HomePage extends StatefulWidget {
 }
 
 class SettingsPage extends StatelessWidget {
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final List<String> _listViewData = [
     "Light theme",
@@ -337,7 +334,7 @@ class TransactionPage extends StatelessWidget {
 
 class IncomePage extends StatelessWidget {
   final myController = TextEditingController();
-  List<String> suggestionsList = ["9.99","19.99", "100.00", "1000.00", "2000.00", "5000.00"];
+  final List<String> suggestionsList = ["9.99","19.99", "100.00", "1000.00", "2000.00", "5000.00"];
 
   @override
   Widget build(BuildContext context) {
@@ -497,7 +494,7 @@ class EditBalancePage extends StatelessWidget {
 
 class ExpensePage extends StatelessWidget {
   final myController = TextEditingController();
-  List<String> suggestionsList = ["1.99","2.99","4.99","9.99","19.99", "29.99", "49.99", "99.99", "199.99"];
+  final List<String> suggestionsList = ["1.99","2.99","4.99","9.99","19.99", "29.99", "49.99", "99.99", "199.99"];
 
   @override
   Widget build(BuildContext context) {

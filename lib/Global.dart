@@ -68,7 +68,7 @@ class Global
     }
 
     _accountsList = await databaseHandler.readAllAccounts();
-    Global.instance.databaseHandler.readAllTransactions();
+    await Global.instance.databaseHandler.readAllTransactions();
     _editing = false;
 
     _initialized = true;

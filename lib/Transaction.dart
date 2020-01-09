@@ -86,12 +86,12 @@ class Setting implements Transaction {
   }
 
   @override
-  void set IdT(int value) {
+  set IdT(int value) {
     _IdT = value;
   }
 
   @override
-  void set dateTime(DateTime value) {
+  set dateTime(DateTime value) {
     _dateTime = value;
   }
 }
@@ -151,12 +151,12 @@ class Income implements Transaction {
   }
 
   @override
-  void set IdT(int value) {
+  set IdT(int value) {
     _IdT = value;
   }
 
   @override
-  void set dateTime(DateTime value) {
+  set dateTime(DateTime value) {
     _dateTime = value;
   }
 }
@@ -215,12 +215,12 @@ class Expense implements Transaction {
   }
 
   @override
-  void set IdT(int value) {
+  set IdT(int value) {
     _IdT = value;
   }
 
   @override
-  void set dateTime(DateTime value) {
+  set dateTime(DateTime value) {
     _dateTime = value;
   }
 }

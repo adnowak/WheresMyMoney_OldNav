@@ -229,22 +229,24 @@ class DatabaseHandler {
         }
       }
 
-      switch(type){
-        case 0:
-          Setting settingToAdd = Setting(IdT, amount, transactionAccount);
-          toReturn.add(settingToAdd);
-          settingToAdd.dateTime = dateTime;
-          break;
-        case 1:
-          Income incomeToAdd = Income(IdT, amount, transactionAccount);
-          toReturn.add(incomeToAdd);
-          incomeToAdd.dateTime = dateTime;
-          break;
-        case 2:
-          Expense expenseToAdd = Expense(IdT, amount, transactionAccount);
-          toReturn.add(expenseToAdd);
-          expenseToAdd.dateTime = dateTime;
-          break;
+      if(transactionAccount!=null){
+        switch(type){
+          case 0:
+            Setting settingToAdd = Setting(IdT, amount, transactionAccount);
+            toReturn.add(settingToAdd);
+            settingToAdd.dateTime = dateTime;
+            break;
+          case 1:
+            Income incomeToAdd = Income(IdT, amount, transactionAccount);
+            toReturn.add(incomeToAdd);
+            incomeToAdd.dateTime = dateTime;
+            break;
+          case 2:
+            Expense expenseToAdd = Expense(IdT, amount, transactionAccount);
+            toReturn.add(expenseToAdd);
+            expenseToAdd.dateTime = dateTime;
+            break;
+        }
       }
     }
     return toReturn;
