@@ -246,8 +246,10 @@ class PickCurrencyNamePage extends StatelessWidget{
 }
 
 class PickCurrencyTagPage extends StatelessWidget{
+  static List<String> listViewData = List<String>.from(Global.instance.currenciesTagSuggestions);
   static String tag;
   final myController = TextEditingController();
+  final tagPicker = MyCupertinoPicker();
 
   @override
   Widget build(BuildContext context) {
@@ -265,6 +267,7 @@ class PickCurrencyTagPage extends StatelessWidget{
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Expanded(
+                            flex: 3,
                             child: Container(
                               margin: EdgeInsets.all(30.0),
                               child:TextField(
@@ -273,8 +276,27 @@ class PickCurrencyTagPage extends StatelessWidget{
                                     border: InputBorder.none,
                                     hintText: 'Enter currency`s tag'
                                 ),
+                                onChanged: (String value) async {
+                                  tag = value;
+                                  listViewData = List<String>.from(Global.instance.currenciesTagSuggestions);
+                                  for(int i=0; i<listViewData.length; i++) {
+                                    String recentTag = listViewData[i];
+                                    if(recentTag.substring(
+                                        0, tag.length) != tag.toUpperCase()) {
+                                      listViewData.remove(recentTag);
+                                      print(listViewData.length);
+                                      i--;
+                                    }
+                                  }
+                                  print(listViewData.length);
+                                  tagPicker.refresh();
+                                },
                               ),
                             )
+                        ),
+                        Expanded(
+                            flex: 18,
+                            child: tagPicker,
                         ),
                         Container(
                           color: Colors.transparent,
@@ -296,7 +318,6 @@ class PickCurrencyTagPage extends StatelessWidget{
                             padding: EdgeInsets.all(8.0),
                             splashColor: Colors.blueAccent,
                             onPressed: (){
-                              PickCurrencyTagPage.tag = myController.text;
                               Navigator.pushNamed(context, 'pickCurrencyLinkRatio');
                             },
                           ),
@@ -309,6 +330,66 @@ class PickCurrencyTagPage extends StatelessWidget{
         )
     );
   }
+}
+
+class MyCupertinoPicker extends StatefulWidget {
+  MyCupertinoPickerState state;
+
+  void refresh(){
+    state.refresh();
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    state = MyCupertinoPickerState();
+    return state;
+  }
+
+}
+
+class MyCupertinoPickerState extends State<MyCupertinoPicker>{
+  List<String> _listViewData = PickCurrencyTagPage.listViewData;
+
+  void refresh(){
+    setState(() {
+      _listViewData = PickCurrencyTagPage.listViewData;
+      print("here: ${_listViewData.length}");
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPicker(
+      backgroundColor: Colors.white,
+      children: _listViewData
+          .map((suggestion) => ListTile(
+        title: Row(
+          children: <Widget>[
+            Expanded(
+                flex: 1,
+                child: Container(
+
+                )
+            ),
+            Text(suggestion),
+            Expanded(
+              flex: 1,
+              child: Container(
+
+              ),
+            )
+          ],
+        ),
+      )).toList(),
+      itemExtent: 50, //height of each item
+      looping: true,
+      onSelectedItemChanged: (int index) {
+        PickCurrencyTagPage.tag = Global.instance.currenciesTagSuggestions[index];
+      },
+    )
+    ;
+  }
+
 }
 
 class PickCurrencyLinkRatioPage extends StatelessWidget{

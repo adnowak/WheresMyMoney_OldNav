@@ -13,6 +13,17 @@ class Global
   bool _editing;
   String _currenciesAPIKey = "7f1e42734df9c2b398a26e895321ec20";
   final String _mainCurrencyPrefs = "mainCurrency";
+  final List<String> _currenciesTagSuggestions = [
+    "AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BMD","BND","BOB","BRL","BSD",
+    "BTC","BTN","BWP","BYN","BZD","CAD","CHF","CLF","CLP","CNY","CRC","CUC","CUP","CVE","CZK","DJF","DKK","DOP","DZD","EGP",
+    "ERN","ETB","FJD","FKP","GBP","GEL","GGP","GHS","GIP","GMD","GTQ","GYD","HKD","HNL","HRK","HTG","HUF","ILS","IMP","INR",
+    "ISK","JEP","JMD","JOD","JPY","KES","KGS","KMF","KPW","KWD","KYD","KZT","LKR","LRD","LSL","LTL","LVL","LYD","MAD","MDL",
+    "MKD","MNT","MOP","MRO","MUR","MVR","MWK","MXN","MYR","MZN","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PAB","PEN","PGK",
+    "PHP","PKR","PLN","QAR","RON","RSD","RUB","SAR","SBD","SCR","SDG","SEK","SGD","SHP","SOS","SRD","SVC","SYP","SZL","THB",
+    "TJS","TMT","TND","TOP","TRY","TTD","TWD","UAH","USD","UYU","VEF","VUV","WST","XAF","XAG","XAU","XCD","XDR","XOF","XPF",
+    "YER","ZAR","ZMW","ZWL"
+  ];
+  List<String> get currenciesTagSuggestions => _currenciesTagSuggestions;
   bool _initialized = false;
 
   bool get editing => _editing;
