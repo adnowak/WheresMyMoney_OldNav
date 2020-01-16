@@ -288,7 +288,6 @@ class PickCurrencyTagPage extends StatelessWidget{
                                       i--;
                                     }
                                   }
-                                  print(listViewData.length);
                                   tagPicker.refresh();
                                 },
                               ),
