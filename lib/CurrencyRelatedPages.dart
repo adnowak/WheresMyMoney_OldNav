@@ -231,6 +231,7 @@ class PickCurrencyNamePage extends StatelessWidget{
                             splashColor: Colors.blueAccent,
                             onPressed: (){
                               PickCurrencyNamePage.name = myController.text;
+                              PickCurrencyTagPage.listViewData = List<String>.from(Global.instance.currenciesTagSuggestions);
                               Navigator.pushNamed(context, 'pickCurrencyTag');
                             },
                           ),
@@ -284,7 +285,6 @@ class PickCurrencyTagPage extends StatelessWidget{
                                     if(recentTag.substring(
                                         0, tag.length) != tag.toUpperCase()) {
                                       listViewData.remove(recentTag);
-                                      print(listViewData.length);
                                       i--;
                                     }
                                   }
@@ -352,8 +352,7 @@ class MyCupertinoPickerState extends State<MyCupertinoPicker>{
 
   void refresh(){
     setState(() {
-      _listViewData = PickCurrencyTagPage.listViewData;
-      print("here: ${_listViewData.length}");
+      _listViewData = List<String>.from(PickCurrencyTagPage.listViewData);
     });
   }
 
@@ -384,7 +383,7 @@ class MyCupertinoPickerState extends State<MyCupertinoPicker>{
       itemExtent: 50, //height of each item
       looping: true,
       onSelectedItemChanged: (int index) {
-        PickCurrencyTagPage.tag = Global.instance.currenciesTagSuggestions[index];
+        PickCurrencyTagPage.tag = _listViewData[index];
       },
     )
     ;
