@@ -10,6 +10,8 @@ import 'Account.dart';
 
 class Global
 {
+  static final Global _instance = Global._privateConstructor();
+
   bool _editing;
   String _currenciesAPIKey = "7f1e42734df9c2b398a26e895321ec20";
   final String _mainCurrencyPrefs = "mainCurrency";
@@ -23,26 +25,64 @@ class Global
     "TJS","TMT","TND","TOP","TRY","TTD","TWD","UAH","USD","UYU","VEF","VUV","WST","XAF","XAG","XAU","XCD","XDR","XOF","XPF",
     "YER","ZAR","ZMW","ZWL"
   ];
-  List<String> get currenciesTagSuggestions => _currenciesTagSuggestions;
   bool _initialized = false;
+  DatabaseHandler _databaseHandler = DatabaseHandler.instance;
+  Global._privateConstructor();
+  List<Currency> _currenciesList;
+  List<Account> _accountsList;
+  List<Transaction> _transactionsList;
+  Currency _mainCurrency;
+  Currency _rootCurrency;
+  Currency _recentCurrency;
+  Account _recentAccount;
+  Transaction _recentTransaction;
+
+  List<String> get currenciesTagSuggestions => _currenciesTagSuggestions;
 
   bool get editing => _editing;
+
+  bool get initialized => _initialized;
+
+  DatabaseHandler get databaseHandler => _databaseHandler;
+
+  static Global get instance {
+    return _instance;
+  }
+
+  List<Currency> get currenciesList => _currenciesList;
+
+  List<Account> get accountsList => _accountsList;
+
+  List<Transaction> get transactionsList => _transactionsList;
+
+  Currency get rootCurrency => _rootCurrency;
+
+  Account get recentAccount => _recentAccount;
+
+  Transaction get recentTransaction => _recentTransaction;
+
+  Currency get recentCurrency => _recentCurrency;
+
+  Currency get mainCurrency => _mainCurrency;
 
   set editing(bool value) {
     _editing = value;
   }
 
-  bool get initialized => _initialized;
-  DatabaseHandler _databaseHandler = DatabaseHandler.instance;
+  set recentCurrency(Currency value) {
+    _recentCurrency = value;
+  }
 
-  DatabaseHandler get databaseHandler => _databaseHandler;
+  set recentTransaction(Transaction value) {
+    _recentTransaction = value;
+  }
 
-  Global._privateConstructor();
+  set recentAccount(Account value) {
+    _recentAccount = value;
+  }
 
-  static final Global _instance = Global._privateConstructor();
-
-  static Global get instance {
-    return _instance;
+  set mainCurrency(Currency value) {
+    _mainCurrency = value;
   }
 
   Future initiateGlobal() async{
@@ -110,52 +150,6 @@ class Global
   String getBalanceToDisplay(){
     return mainCurrency.toNaturalLanguage(getBalance());
   }
-
-  List<Currency> _currenciesList;
-
-  List<Currency> get currenciesList => _currenciesList;
-
-  List<Account> _accountsList;
-
-  List<Account> get accountsList => _accountsList;
-
-  List<Transaction> _transactionsList;
-
-  List<Transaction> get transactionsList => _transactionsList;
-
-  Currency _mainCurrency;
-  Currency _rootCurrency;
-
-  Currency get rootCurrency => _rootCurrency;
-
-  set mainCurrency(Currency value) {
-    _mainCurrency = value;
-  }
-
-  Currency _recentCurrency;
-  Account _recentAccount;
-
-  Account get recentAccount => _recentAccount;
-
-  set recentAccount(Account value) {
-    _recentAccount = value;
-  }
-
-  Transaction _recentTransaction;
-
-  Transaction get recentTransaction => _recentTransaction;
-
-  set recentTransaction(Transaction value) {
-    _recentTransaction = value;
-  }
-
-  Currency get recentCurrency => _recentCurrency;
-
-  set recentCurrency(Currency value) {
-    _recentCurrency = value;
-  }
-
-  Currency get mainCurrency => _mainCurrency;
 
   //returns if execution went fine
   bool addIncome(String amountString){

@@ -32,16 +32,16 @@ class Currency
     _IdC = value;
   }
 
-  void insertToDatabase(){
-    Global.instance.databaseHandler.insertCurrency(this);
-  }
-
   set link(Currency value) {
     _link = value;
   }
 
   bool equals(Currency other){
     return tag == other.tag;
+  }
+
+  void insertToDatabase(){
+    Global.instance.databaseHandler.insertCurrency(this);
   }
 
   Decimal toRootRatio()

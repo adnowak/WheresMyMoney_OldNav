@@ -12,15 +12,23 @@ class Account
   BigInt _balance = BigInt.from(0);
   List<Transaction> _transactionsList = List<Transaction>();
   String _type;
+  static List<String> accountTypes = ["Wallet","Bank Account","Stock Shares","Cryptocurrency Account","Credit Card","Deposit","Loan","Other Possesion"];
+
+  int get IdA => _IdA;
 
   String get type => _type;
-  static List<String> accountTypes = ["Wallet","Bank Account","Stock Shares","Cryptocurrency Account","Credit Card","Deposit","Loan","Other Possesion"];
+
+  List<Transaction> get transactionsList => _transactionsList;
+
+  String get name => _name;
+
+  BigInt get balance => _balance;
+
+  Currency get currency => _currency;
 
   set IdA(int value) {
     _IdA = value;
   }
-
-  int get IdA => _IdA;
 
   set balance(BigInt value) {
     _balance = value;
@@ -30,9 +38,6 @@ class Account
     _transactionsList = value;
   }
 
-
-  List<Transaction> get transactionsList => _transactionsList;
-
   Account(this._name, this._currency, this._type){
     _transactionsList = List<Transaction>();
     this._balance = BigInt.from(0);
@@ -41,12 +46,6 @@ class Account
   String getData(){
     return "$_name: ${_currency.toNaturalLanguage(_balance)}";
   }
-
-  String get name => _name;
-
-  BigInt get balance => _balance;
-
-  Currency get currency => _currency;
 
   Icon getIcon(){
     switch(_type){

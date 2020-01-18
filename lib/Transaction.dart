@@ -166,9 +166,10 @@ class Expense implements Transaction {
   BigInt _amount;
 
   @override
-  Account transactionAccount;
+  int _IdT;
 
-  int get IdT => _IdT;
+  @override
+  Account transactionAccount;
 
   Expense(this._IdT, this._amount, this.transactionAccount) {
     _dateTime = DateTime.now();
@@ -176,32 +177,10 @@ class Expense implements Transaction {
     transactionAccount.countBalance();
   }
 
-  String toString(){
-    return "Expense: ${transactionAccount.currency.toNaturalLanguage(_amount)}";
-  }
-
-  @override
-  int _IdT;
+  int get IdT => _IdT;
 
   @override
   BigInt get amount => _amount;
-
-  @override
-  void deleteTransaction() {
-    transactionAccount.transactionsList.remove(this);
-    transactionAccount.countBalance();
-    Global.instance.databaseHandler.deleteTransaction(_IdT);
-  }
-
-  @override
-  BigInt takeIntoAccount(BigInt baseBalance) {
-    return baseBalance-_amount;
-  }
-
-  @override
-  set amount(BigInt value) {
-    _amount = value;
-  }
 
   @override
   DateTime _dateTime;
@@ -222,5 +201,26 @@ class Expense implements Transaction {
   @override
   set dateTime(DateTime value) {
     _dateTime = value;
+  }
+
+  @override
+  set amount(BigInt value) {
+    _amount = value;
+  }
+
+  @override
+  void deleteTransaction() {
+    transactionAccount.transactionsList.remove(this);
+    transactionAccount.countBalance();
+    Global.instance.databaseHandler.deleteTransaction(_IdT);
+  }
+
+  @override
+  BigInt takeIntoAccount(BigInt baseBalance) {
+    return baseBalance-_amount;
+  }
+
+  String toString(){
+    return "Expense: ${transactionAccount.currency.toNaturalLanguage(_amount)}";
   }
 }
