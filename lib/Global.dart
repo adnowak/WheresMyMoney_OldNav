@@ -13,7 +13,7 @@ class Global
   static final Global _instance = Global._privateConstructor();
 
   bool _editing;
-  String _currenciesAPIKey = "7f1e42734df9c2b398a26e895321ec20";
+  String _currenciesAPIKey = "";
   final String _mainCurrencyPrefs = "mainCurrency";
   final List<String> _currenciesTagSuggestions = [
     "AED","AFN","ALL","AMD","ANG","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BHD","BMD","BND","BOB","BRL","BSD",

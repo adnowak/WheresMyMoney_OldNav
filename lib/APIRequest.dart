@@ -21,17 +21,17 @@ class RatesRequest extends APIRequest {
 
   RatesRequest() {
     _name = "Rates";
-    _requestURL = "http://data.fixer.io/api/latest?access_key=";
+    _requestURL = "http://adamnow.vot.pl/";
   }
 
   void makeRequest(API requestAPI) async{
     http.Response response = await fetchPost(requestAPI);
-    String currenciesData = response.body.split("{")[2].split("}")[0];
+    String currenciesData = response.body.split("{")[1].split("}")[0];
 
     List<String> currenciesDataList = currenciesData.split(",");
     for(String currencyData in currenciesDataList){
       for(Currency currency in Global.instance.currenciesList){
-        if(currencyData.split(":")[0] == '"${currency.tag}"'){
+        if(currencyData.split(":")[0] == '${currency.tag}'){
           Global.instance.editCurrency(currency, currency.name, currency.tag, currencyData.split(":")[1], currency.pointPosition.toString(), Global.instance.rootCurrency);
         }
       }
