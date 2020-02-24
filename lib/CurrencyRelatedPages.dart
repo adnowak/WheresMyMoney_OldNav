@@ -231,7 +231,6 @@ class PickCurrencyNamePage extends StatelessWidget{
                             splashColor: Colors.blueAccent,
                             onPressed: (){
                               PickCurrencyNamePage.name = myController.text;
-                              PickCurrencyTagPage.listViewData = List<String>.from(Global.instance.currenciesTagSuggestions);
                               Navigator.pushNamed(context, 'pickCurrencyTag');
                             },
                           ),
@@ -247,10 +246,8 @@ class PickCurrencyNamePage extends StatelessWidget{
 }
 
 class PickCurrencyTagPage extends StatelessWidget{
-  static List<String> listViewData = List<String>.from(Global.instance.currenciesTagSuggestions);
   static String tag;
   final myController = TextEditingController();
-  final tagPicker = MyCupertinoPicker();
 
   @override
   Widget build(BuildContext context) {
@@ -277,25 +274,11 @@ class PickCurrencyTagPage extends StatelessWidget{
                                     border: InputBorder.none,
                                     hintText: 'Enter currency`s tag'
                                 ),
-                                onChanged: (String value) async {
-                                  tag = value;
-                                  listViewData = List<String>.from(Global.instance.currenciesTagSuggestions);
-                                  for(int i=0; i<listViewData.length; i++) {
-                                    String recentTag = listViewData[i];
-                                    if(recentTag.substring(
-                                        0, tag.length) != tag.toUpperCase()) {
-                                      listViewData.remove(recentTag);
-                                      i--;
-                                    }
-                                  }
-                                  tagPicker.refresh();
+                                onChanged:(text) {
+                                  tag = text;
                                 },
                               ),
                             )
-                        ),
-                        Expanded(
-                            flex: 18,
-                            child: tagPicker,
                         ),
                         Container(
                           color: Colors.transparent,
@@ -331,6 +314,7 @@ class PickCurrencyTagPage extends StatelessWidget{
   }
 }
 
+/*
 class MyCupertinoPicker extends StatefulWidget {
   MyCupertinoPickerState state;
 
@@ -388,7 +372,7 @@ class MyCupertinoPickerState extends State<MyCupertinoPicker>{
     ;
   }
 
-}
+}*/
 
 class PickCurrencyLinkRatioPage extends StatelessWidget{
   static String linkRatio;
@@ -461,7 +445,7 @@ class PickCurrencyPointPositionPage extends StatelessWidget{
   final List<String> _listViewData = ["1","10","100","1000","10000","100000",
     "1000000","10000000","100000000","1000000000","10000000000","100000000000","1000000000000","10000000000000",
     "100000000000000","1000000000000000","10000000000000000","100000000000000000","1000000000000000000"];
-  static String chosenOption;
+  static String chosenOption = "0";
 
   @override
   Widget build(BuildContext context) {

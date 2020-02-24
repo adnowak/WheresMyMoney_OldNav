@@ -404,5 +404,4 @@ class PickAccountNamePage extends StatelessWidget{
         )
     );
   }
-
 }

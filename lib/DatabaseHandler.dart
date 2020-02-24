@@ -21,14 +21,14 @@ class DatabaseHandler {
   static final currencyTag = 'tag';
   static final currencyLinkRatio = 'linkRatio';
   static final currencyPointPosition = 'pointPosition';
-  static final currencyLinkId = 'linkId';
+  static final currencyLinkTag = 'linkTag';
 
   static final accountsTable = 'accounts';
 
   static final accountId = 'id';
   static final accountName = 'name';
   static final accountType = 'type';
-  static final accountCurrencyId = 'idC';
+  static final accountCurrencyTag = 'tagC';
 
   static final transactionsTable = 'transactions';
 
@@ -64,12 +64,11 @@ class DatabaseHandler {
   Future _onCreate(Database db, int version) async {
     await db.execute('''
           CREATE TABLE $currenciesTable(
-            $currencyId INTEGER PRIMARY KEY AUTOINCREMENT,
-            $currencyName TEXT NOT NULL,
+            $currencyName TEXT PRIMARY KEY NOT NULL,
             $currencyTag TEXT NOT NULL,
             $currencyLinkRatio TEXT NOT NULL,
             $currencyPointPosition INTEGER NOT NULL,
-            $currencyLinkId INTEGER NOT NULL
+            $currencyLinkTag TEXT NOT NULL
           )
           ''');
 
@@ -78,7 +77,7 @@ class DatabaseHandler {
             $accountId INTEGER PRIMARY KEY AUTOINCREMENT,
             $accountName TEXT NOT NULL,
             $accountType TEXT NOT NULL,
-            $accountCurrencyId INTEGER NOT NULL
+            $accountCurrencyTag TEXT NOT NULL
           )
           ''');
 
@@ -99,9 +98,9 @@ class DatabaseHandler {
       currencyTag  : currencyToInsert.tag,
       currencyLinkRatio  : currencyToInsert.linkRatio.toString(),
       currencyPointPosition  : currencyToInsert.pointPosition,
-      currencyLinkId  : currencyToInsert.link.IdC,
+      currencyLinkTag  : currencyToInsert.link.tag,
     };
-    currencyToInsert.IdC = await insert(currenciesTable, row);
+    await insert(currenciesTable, row);
   }
 
   Future<List<Currency>> readAllCurrencies() async{
@@ -114,19 +113,17 @@ class DatabaseHandler {
       List<Currency> toReturn = List<Currency>();
       //creation
       for(int i=0; i<result.length; i++){
-        int id = result[i].values.toList().elementAt(0);
-        String name = result[i].values.toList().elementAt(1);
-        String tag = result[i].values.toList().elementAt(2);
-        Decimal linkRatio = Decimal.parse(result[i].values.toList().elementAt(3));
-        int pointPosition = result[i].values.toList().elementAt(4);
+        String name = result[i].values.toList().elementAt(0);
+        String tag = result[i].values.toList().elementAt(1);
+        Decimal linkRatio = Decimal.parse(result[i].values.toList().elementAt(2));
+        int pointPosition = result[i].values.toList().elementAt(3);
         Currency currency = Currency(null, linkRatio, tag, name, pointPosition);
-        currency.IdC = id;
         toReturn.add(currency);
       }
       //linking
       for(int i=0; i<result.length; i++){
         for(int j=0; j<result.length; j++){
-          if(toReturn.elementAt(j).IdC == result[i].values.toList().elementAt(5)){
+          if(toReturn.elementAt(j).tag == result[i].values.toList().elementAt(4)){
             toReturn.elementAt(i).link = toReturn.elementAt(j);
           }
         }
@@ -140,9 +137,9 @@ class DatabaseHandler {
     return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $currenciesTable'));
   }
 
-  Future<int> deleteCurrency(int id) async {
+  Future<int> deleteCurrency(String tag) async {
     Database db = await instance.database;
-    return await db.delete(currenciesTable, where: '$currencyId = ?', whereArgs: [id]);
+    return await db.delete(currenciesTable, where: '$currencyTag = ?', whereArgs: [tag]);
   }
 
   Future<int> updateCurrency(Currency currencyToUpdate) async {
@@ -151,17 +148,17 @@ class DatabaseHandler {
       currencyTag  : currencyToUpdate.tag,
       currencyLinkRatio  : currencyToUpdate.linkRatio.toString(),
       currencyPointPosition  : currencyToUpdate.pointPosition,
-      currencyLinkId  : currencyToUpdate.link.IdC,
+      currencyLinkTag  : currencyToUpdate.link.tag,
     };
     Database db = await instance.database;
-    return await db.update(currenciesTable, row, where: '$currencyId = ?', whereArgs: [currencyToUpdate.IdC]);
+    return await db.update(currenciesTable, row, where: '$currencyTag = ?', whereArgs: [currencyToUpdate.tag]);
   }
 
   void insertAccount(Account accountToInsert) async {
     Map<String, dynamic> row = {
       accountName  : accountToInsert.name,
       accountType  : accountToInsert.type,
-      accountCurrencyId  : accountToInsert.currency.IdC,
+      accountCurrencyTag  : accountToInsert.currency.tag,
     };
     accountToInsert.IdA = await insert(accountsTable, row);
   }
@@ -177,7 +174,7 @@ class DatabaseHandler {
       String type = result[i].values.toList().elementAt(2);
       Currency accountCurrency;
       for(int j=0; j<Global.instance.currenciesList.length; j++){
-        if(Global.instance.currenciesList[j].IdC == result[i].values.toList().elementAt(3)){
+        if(Global.instance.currenciesList[j].tag == result[i].values.toList().elementAt(3)){
           accountCurrency = Global.instance.currenciesList[j];
         }
       }

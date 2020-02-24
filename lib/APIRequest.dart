@@ -17,14 +17,12 @@ class RatesRequest extends APIRequest {
   String _name;
   String _requestURL;
 
-  static String requestTag;
-
   RatesRequest() {
     _name = "Rates";
     _requestURL = "http://adamnow.vot.pl/";
   }
 
-  void makeRequest(API requestAPI) async{
+  Future makeRequest(API requestAPI) async{
     http.Response response = await fetchPost(requestAPI);
     String currenciesData = response.body.split("{")[1].split("}")[0];
 

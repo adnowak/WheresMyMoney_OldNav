@@ -1,5 +1,6 @@
 import 'package:wheresmymoney_old_nav/Account.dart';
 
+import 'DatabaseHandler.dart';
 import 'Global.dart';
 
 abstract class Transaction {
@@ -61,7 +62,7 @@ class Setting implements Transaction {
   void deleteTransaction() {
     transactionAccount.transactionsList.remove(this);
     transactionAccount.countBalance();
-    Global.instance.databaseHandler.deleteTransaction(_IdT);
+    DatabaseHandler.instance.deleteTransaction(_IdT);
   }
 
   @override
@@ -126,7 +127,7 @@ class Income implements Transaction {
   void deleteTransaction() {
     transactionAccount.transactionsList.remove(this);
     transactionAccount.countBalance();
-    Global.instance.databaseHandler.deleteTransaction(_IdT);
+    DatabaseHandler.instance.deleteTransaction(_IdT);
   }
 
   @override
@@ -212,7 +213,7 @@ class Expense implements Transaction {
   void deleteTransaction() {
     transactionAccount.transactionsList.remove(this);
     transactionAccount.countBalance();
-    Global.instance.databaseHandler.deleteTransaction(_IdT);
+    DatabaseHandler.instance.deleteTransaction(_IdT);
   }
 
   @override

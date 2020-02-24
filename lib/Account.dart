@@ -3,6 +3,7 @@ import 'package:wheresmymoney_old_nav/Global.dart';
 import 'package:wheresmymoney_old_nav/Transaction.dart';
 
 import 'Currency.dart';
+import 'DatabaseHandler.dart';
 
 class Account
 {
@@ -84,7 +85,7 @@ class Account
   }
 
   void insertToDatabase(){
-    Global.instance.databaseHandler.insertAccount(this);
+    DatabaseHandler.instance.insertAccount(this);
   }
 
   void deleteAccount(){
@@ -92,6 +93,6 @@ class Account
     for(int i =0; i<_transactionsList.length; i++){
       _transactionsList[i].deleteTransaction();
     }
-    Global.instance.databaseHandler.deleteAccount(_IdA);
+    DatabaseHandler.instance.deleteAccount(_IdA);
   }
 }

@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Where`s My Money!',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -109,7 +110,7 @@ class AccountsPage extends StatelessWidget {
     return Scaffold(
         key: _scaffoldKey,
       appBar: AppBar(
-
+        title: const Text('Accounts'),
       ),
       body: Center(
         child: Column(
@@ -196,7 +197,7 @@ class CurrenciesPage extends StatelessWidget {
     Global.instance.readAllFromDatabase();
     return Scaffold(
       appBar: AppBar(
-
+        title: const Text('Currencies'),
       ),
         body: Center(
             child: Column(
@@ -585,7 +586,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     appContext = context;
-    if(Global.instance.initialized){
+    if(Global.instance.initiated){
       return Scaffold(
         appBar: AppBar(
           title: Text("Where`s My Money!"),

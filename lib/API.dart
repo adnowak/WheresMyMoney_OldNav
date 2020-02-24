@@ -20,13 +20,13 @@ class API
     _apiRequestsList.add(newRequest);
   }
 
-  void makeRequest(String name)
-  {
+  Future makeRequest(String name) async{
     for(APIRequest request in _apiRequestsList)
     {
       if(request.name == name)
       {
-        request.makeRequest(this);
+        //the "await" here is good, the IDE must be crazy
+        await request.makeRequest(this);
         break;
       }
     }
