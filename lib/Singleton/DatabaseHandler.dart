@@ -4,10 +4,10 @@ import 'package:decimal/decimal.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' hide Transaction;
 import 'package:path_provider/path_provider.dart';
-import 'package:wheresmymoney_old_nav/Currency.dart';
-import 'package:wheresmymoney_old_nav/Global.dart';
-import 'Transaction.dart';
-import 'Account.dart';
+import 'package:wheresmymoney_old_nav/Models/Currency.dart';
+import 'package:wheresmymoney_old_nav/Singleton/Global.dart';
+import '../Models/Transaction.dart';
+import '../Models/Account.dart';
 
 class DatabaseHandler {
 

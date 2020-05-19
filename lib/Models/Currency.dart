@@ -1,8 +1,8 @@
 import 'package:decimal/decimal.dart';
-import 'package:wheresmymoney_old_nav/Global.dart';
-import 'package:wheresmymoney_old_nav/Transaction.dart';
+import 'package:wheresmymoney_old_nav/Singleton/Global.dart';
+import 'package:wheresmymoney_old_nav/Models/Transaction.dart';
 
-import 'DatabaseHandler.dart';
+import '../Singleton/DatabaseHandler.dart';
 class Currency
 {
   String _name;
@@ -25,6 +25,12 @@ class Currency
 
   set link(Currency value) {
     _link = value;
+  }
+
+
+
+  set name(String value) {
+    _name = value;
   }
 
   bool equals(Currency other){
@@ -132,75 +138,15 @@ class Currency
     return div;
   }
 
-  bool deleteCurrency(){
-    for(int i =0; i<Global.instance.accountsList.length; i++){
-      if(Global.instance.accountsList[i].currency==this){
-        return false;
-      }
-    }
-    for(int i =0; i<Global.instance.baseCurrenciesTags.length; i++){
-      if(Global.instance.baseCurrenciesTags[i] == this.tag){
-        return false;
-      }
-    }
-    for(int i=0; i<Global.instance.currenciesList.length; i++){
-      if(Global.instance.currenciesList[i]!=this&&Global.instance.currenciesList[i].isLinkedTo(this)){
-        return false;
-      }
-    }
-    if(this==Global.instance.rootCurrency || this==Global.instance.mainCurrency){
-      return false;
-    }
-    if(this==Global.instance.recentCurrency){
-      Global.instance.recentCurrency = Global.instance.mainCurrency;
-    }
-    Global.instance.currenciesList.remove(this);
-    DatabaseHandler.instance.deleteCurrency(this.tag);
-    return true;
+  set tag(String value) {
+    _tag = value;
   }
 
-  bool editCurrency(String newName, String newTag, String newLinkRatio, String newPointPosition, Currency newLink){
-    if(newLink==this){
-      return false;
-    }
+  set linkRatio(Decimal value) {
+    _linkRatio = value;
+  }
 
-    if(this==Global.instance.rootCurrency){
-      if(newName!=_name||newTag!=_tag||Decimal.parse(newLinkRatio)!=Decimal.parse("1")||newLink!=this){
-        return false;
-      }
-    }
-
-    if(newName!=null&&newName!=""){
-      _name = newName;
-    }
-    if(newTag!=null&&newTag!=""){
-      _tag = newTag;
-    }
-    if(newPointPosition!=null&&newPointPosition!=""){
-      for(int i=0; i<Global.instance.accountsList.length; i++){
-        if(Global.instance.accountsList[i].currency==this){
-          for(int j=0; j<Global.instance.accountsList[i].transactionsList.length; j++){
-            Transaction recentTransactionToEdit = Global.instance.accountsList[i].transactionsList[j];
-            recentTransactionToEdit.amount =(recentTransactionToEdit.amount*BigInt.from(10).pow(BigInt.parse(newPointPosition).toInt()))~/BigInt.from(10).pow(BigInt.from(_pointPosition).toInt());
-          }
-          Global.instance.accountsList[i].countBalance();
-        }
-      }
-      _pointPosition = BigInt.parse(newPointPosition).toInt();
-    }
-
-    if(newLinkRatio!=null&&newLinkRatio!=""){
-      _linkRatio = Decimal.parse(newLinkRatio);
-    }
-
-    if(newLink!=null){
-      _link = newLink;
-    }
-    else{
-      _link = Global.instance.rootCurrency;
-    }
-
-    DatabaseHandler.instance.updateCurrency(this);
-    return true;
+  set pointPosition(int value) {
+    _pointPosition = value;
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
-import 'Currency.dart';
-import 'Global.dart';
+import '../Models/Currency.dart';
+import '../Singleton/Global.dart';
 
 class CurrencyPage extends StatelessWidget {
   @override

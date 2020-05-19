@@ -1,34 +1,32 @@
-import 'package:wheresmymoney_old_nav/Account.dart';
+import 'package:wheresmymoney_old_nav/Models/Account.dart';
 
-import 'DatabaseHandler.dart';
-import 'Global.dart';
+import '../Singleton/DatabaseHandler.dart';
+import '../Singleton/Global.dart';
 
 abstract class Transaction {
   int _IdT;
-
-  set IdT(int value) {
-    _IdT = value;
-  }
-
   BigInt _amount;
   DateTime _dateTime;
-
-  set dateTime(DateTime value) {
-    _dateTime = value;
-  }
-
-  DateTime get dateTime => _dateTime;
   Account transactionAccount;
-
-  set amount(BigInt value) {
-    _amount = value;
-  }
 
   BigInt get amount => _amount;
 
   int get IdT => _IdT;
 
-  void deleteTransaction();
+  DateTime get dateTime => _dateTime;
+
+  set IdT(int value) {
+    _IdT = value;
+  }
+
+  set dateTime(DateTime value) {
+    _dateTime = value;
+  }
+
+  set amount(BigInt value) {
+    _amount = value;
+  }
+
   BigInt takeIntoAccount(BigInt baseBalance);
   int getType();
 }
@@ -57,13 +55,6 @@ class Setting implements Transaction {
 
   @override
   BigInt get amount => _amount;
-
-  @override
-  void deleteTransaction() {
-    transactionAccount.transactionsList.remove(this);
-    transactionAccount.countBalance();
-    DatabaseHandler.instance.deleteTransaction(_IdT);
-  }
 
   @override
   BigInt takeIntoAccount(BigInt baseBalance) {
@@ -122,13 +113,6 @@ class Income implements Transaction {
 
   @override
   BigInt get amount => _amount;
-
-  @override
-  void deleteTransaction() {
-    transactionAccount.transactionsList.remove(this);
-    transactionAccount.countBalance();
-    DatabaseHandler.instance.deleteTransaction(_IdT);
-  }
 
   @override
   BigInt takeIntoAccount(BigInt baseBalance) {
@@ -207,13 +191,6 @@ class Expense implements Transaction {
   @override
   set amount(BigInt value) {
     _amount = value;
-  }
-
-  @override
-  void deleteTransaction() {
-    transactionAccount.transactionsList.remove(this);
-    transactionAccount.countBalance();
-    DatabaseHandler.instance.deleteTransaction(_IdT);
   }
 
   @override

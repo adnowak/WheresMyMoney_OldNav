@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:wheresmymoney_old_nav/Account.dart';
-import 'package:wheresmymoney_old_nav/Currency.dart';
-import 'package:wheresmymoney_old_nav/Transaction.dart';
+import 'package:wheresmymoney_old_nav/Models/Account.dart';
+import 'package:wheresmymoney_old_nav/Models/Currency.dart';
+import 'package:wheresmymoney_old_nav/Models/Transaction.dart';
 
 void main() {
   test("Test countBalance()", () {

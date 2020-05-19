@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wheresmymoney_old_nav/Global.dart';
-import 'package:wheresmymoney_old_nav/Transaction.dart';
+import 'package:wheresmymoney_old_nav/Singleton/Global.dart';
+import 'package:wheresmymoney_old_nav/Models/Transaction.dart';
 
 import 'Currency.dart';
-import 'DatabaseHandler.dart';
+import '../Singleton/DatabaseHandler.dart';
 
 class Account
 {
@@ -82,17 +82,5 @@ class Account
     for(int i =0; i<_transactionsList.length; i++){
       _balance = _transactionsList[i].takeIntoAccount(_balance);
     }
-  }
-
-  void insertToDatabase(){
-    DatabaseHandler.instance.insertAccount(this);
-  }
-
-  void deleteAccount(){
-    Global.instance.accountsList.remove(this);
-    for(int i =0; i<_transactionsList.length; i++){
-      _transactionsList[i].deleteTransaction();
-    }
-    DatabaseHandler.instance.deleteAccount(_IdA);
   }
 }

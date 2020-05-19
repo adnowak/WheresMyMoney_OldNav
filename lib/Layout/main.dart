@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:toast/toast.dart';
-import 'Account.dart';
+import '../Models/Account.dart';
 import 'AccountRelatedPages.dart';
-import 'Currency.dart';
+import '../Models/Currency.dart';
 import 'CurrencyRelatedPages.dart';
-import 'Global.dart';
+import '../Singleton/Global.dart';
 
 BuildContext appContext;
 
@@ -215,8 +215,7 @@ class CurrenciesPage extends StatelessWidget {
                         leading: currency.tag == Global.instance.mainCurrency.tag ? IconButton(
                           icon: new Icon(Icons.favorite),
                           onPressed: () {
-                            Global.instance.mainCurrency = currency;
-                            Global.instance.setMainCurrencyPrefs(currency);
+                            Global.instance.setMainCurrency(currency);
                             Toast.show("Main currency: ${Global.instance.mainCurrency.tag}", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                             Navigator.pushReplacement(
                                 context,
@@ -225,8 +224,7 @@ class CurrenciesPage extends StatelessWidget {
                         ) : IconButton(
                           icon: new Icon(Icons.favorite_border),
                           onPressed: () {
-                            Global.instance.mainCurrency = currency;
-                            Global.instance.setMainCurrencyPrefs(currency);
+                            Global.instance.setMainCurrency(currency);
                             Toast.show("Main currency: ${Global.instance.mainCurrency.tag}", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                             Navigator.pushReplacement(
                                 context,

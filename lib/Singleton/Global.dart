@@ -2,12 +2,12 @@ import 'package:decimal/decimal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
-import 'API.dart';
-import 'APIRequest.dart';
+import '../Models/API.dart';
+import '../Models/APIRequest.dart';
 import 'DatabaseHandler.dart';
-import 'Transaction.dart';
-import 'Currency.dart';
-import 'Account.dart';
+import '../Models/Transaction.dart';
+import '../Models/Currency.dart';
+import '../Models/Account.dart';
 
 class Global
 {
@@ -81,6 +81,11 @@ class Global
 
   set mainCurrency(Currency value) {
     _mainCurrency = value;
+  }
+
+  void setMainCurrency(Currency currency){
+    mainCurrency = currency;
+    setMainCurrencyPrefs(currency);
   }
 
   Future initiateGlobal() async{
@@ -385,10 +390,10 @@ class Global
 
   //returns if execution went fine
   bool addAccount(String accountName, Currency accountCurrency, String accountType){
-    if(accountName!=null&&accountName!=""){
+    if(accountName!=null && accountName!=""){
       Account newAccount = Account(accountName, accountCurrency, accountType);
       _accountsList.add(newAccount);
-      newAccount.insertToDatabase();
+      DatabaseHandler.instance.insertAccount(newAccount);
       return true;
     }
     else{
@@ -425,7 +430,9 @@ class Global
     //returns if execution went fine
   bool deleteTransaction(Transaction transactionToDelete){
     try{
-      transactionToDelete.deleteTransaction();
+      transactionToDelete.transactionAccount.transactionsList.remove(transactionToDelete);
+      transactionToDelete.transactionAccount.countBalance();
+      DatabaseHandler.instance.deleteTransaction(transactionToDelete.IdT);
       return true;
     }
     on Exception{
@@ -436,7 +443,12 @@ class Global
   //returns if execution went fine
   bool deleteAccount(Account accountToDelete){
     try{
-      accountToDelete.deleteAccount();
+      Global.instance.accountsList.remove(accountToDelete);
+      for(int i =0; i<accountToDelete.transactionsList.length; i++){
+        accountToDelete.transactionsList.remove(accountToDelete);
+        DatabaseHandler.instance.deleteTransaction(accountToDelete.transactionsList[i].IdT);
+      }
+      DatabaseHandler.instance.deleteAccount(accountToDelete.IdA);
       return true;
     }
     on Exception{
@@ -447,7 +459,35 @@ class Global
   //returns if execution went fine
   bool deleteCurrency(Currency currencyToDelete){
     try{
-      return currencyToDelete.deleteCurrency();
+      for(int i =0; i<accountsList.length; i++){
+        if(accountsList[i].currency==currencyToDelete){
+          return false;
+        }
+      }
+
+      for(int i =0; i<baseCurrenciesTags.length; i++){
+        if(baseCurrenciesTags[i] == currencyToDelete.tag){
+          return false;
+        }
+      }
+
+      for(int i=0; i<currenciesList.length; i++){
+        if(currenciesList[i]!=currencyToDelete && currenciesList[i].isLinkedTo(currencyToDelete)){
+          return false;
+        }
+      }
+
+      if(currencyToDelete == rootCurrency || currencyToDelete == mainCurrency){
+        return false;
+      }
+
+      if(currencyToDelete == recentCurrency){
+        recentCurrency = mainCurrency;
+      }
+
+      currenciesList.remove(currencyToDelete);
+      DatabaseHandler.instance.deleteCurrency(currencyToDelete.tag);
+      return true;
     }
     on Exception{
       return false;
@@ -457,7 +497,48 @@ class Global
   //returns if execution went fine
   bool editCurrency(Currency currencyToEdit, String newName, String newTag, String newLinkRatio, String newPointPosition, Currency newLink){
     try{
-      return currencyToEdit.editCurrency(newName, newTag, newLinkRatio, newPointPosition, newLink);
+      if(newLink == currencyToEdit){
+        return false;
+      }
+
+      if(currencyToEdit == rootCurrency){
+        if(newName!=currencyToEdit.name||newTag!=currencyToEdit.tag||Decimal.parse(newLinkRatio)!=Decimal.parse("1")||newLink!=currencyToEdit){
+          return false;
+        }
+      }
+
+      if(newName!=null&&newName!=""){
+        currencyToEdit.name = newName;
+      }
+      if(newTag!=null&&newTag!=""){
+        currencyToEdit.tag = newTag;
+      }
+      if(newPointPosition!=null&&newPointPosition!=""){
+        for(int i=0; i<accountsList.length; i++){
+          if(accountsList[i].currency == currencyToEdit){
+            for(int j=0; j<accountsList[i].transactionsList.length; j++){
+              Transaction recentTransactionToEdit = accountsList[i].transactionsList[j];
+              recentTransactionToEdit.amount =(recentTransactionToEdit.amount * BigInt.from(10).pow(BigInt.parse(newPointPosition).toInt()))~/BigInt.from(10).pow(BigInt.from(currencyToEdit.pointPosition).toInt());
+            }
+            accountsList[i].countBalance();
+          }
+        }
+        currencyToEdit.pointPosition = BigInt.parse(newPointPosition).toInt();
+      }
+
+      if(newLinkRatio!=null&&newLinkRatio!=""){
+        currencyToEdit.linkRatio = Decimal.parse(newLinkRatio);
+      }
+
+      if(newLink!=null){
+        currencyToEdit.link = newLink;
+      }
+      else{
+        currencyToEdit.link = rootCurrency;
+      }
+
+      DatabaseHandler.instance.updateCurrency(currencyToEdit);
+      return true;
     }
     on Exception{
       return false;

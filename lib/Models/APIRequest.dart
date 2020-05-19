@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
-import 'package:wheresmymoney_old_nav/Currency.dart';
-import 'package:wheresmymoney_old_nav/Global.dart';
+import 'package:wheresmymoney_old_nav/Models/Currency.dart';
+import 'package:wheresmymoney_old_nav/Singleton/Global.dart';
 
 import 'API.dart';
 

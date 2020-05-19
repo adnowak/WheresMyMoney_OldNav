@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:toast/toast.dart';
-import 'Account.dart';
-import 'Currency.dart';
-import 'Global.dart';
-import 'Transaction.dart';
+import '../Models/Account.dart';
+import '../Models/Currency.dart';
+import '../Singleton/Global.dart';
+import '../Models/Transaction.dart';
 
 class AccountPage extends StatelessWidget {
   final List<Transaction> _listViewData = Global.instance.recentAccount.transactionsList;
