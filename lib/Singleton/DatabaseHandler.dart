@@ -163,6 +163,20 @@ class DatabaseHandler {
     accountToInsert.IdA = await insert(accountsTable, row);
   }
 
+  Currency getAccountCurrency(Map<String, dynamic> result){
+    Currency accountCurrency;
+    for(int j=0; j<Global.instance.currenciesList.length; j++){
+      if(Global.instance.currenciesList[j].tag == result.values.toList().elementAt(3)){
+        accountCurrency = Global.instance.currenciesList[j];
+      }
+    }
+    if(accountCurrency==null){
+      accountCurrency = Global.instance.rootCurrency;
+    }
+    return accountCurrency;
+  }
+
+
   Future<List<Account>> readAllAccounts() async{
     Database db = await instance.database;
     List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $accountsTable');
@@ -173,14 +187,8 @@ class DatabaseHandler {
       String name = result[i].values.toList().elementAt(1);
       String type = result[i].values.toList().elementAt(2);
       Currency accountCurrency;
-      for(int j=0; j<Global.instance.currenciesList.length; j++){
-        if(Global.instance.currenciesList[j].tag == result[i].values.toList().elementAt(3)){
-          accountCurrency = Global.instance.currenciesList[j];
-        }
-      }
-      if(accountCurrency==null){
-        accountCurrency = Global.instance.rootCurrency;
-      }
+
+      accountCurrency = getAccountCurrency(result[i]);
       Account account = Account(name, accountCurrency, type);
       account.IdA = id;
       toReturn.add(account);

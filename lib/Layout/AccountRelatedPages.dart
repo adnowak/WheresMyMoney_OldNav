@@ -130,13 +130,14 @@ class AccountPage extends StatelessWidget {
                           color: Colors.red,
                           icon: Icons.delete,
                           onTap: () {
-                            if(Global.instance.deleteTransaction(transaction)){
+                            try{
+                              Global.instance.deleteTransaction(transaction);
                               Toast.show("Deleted succesfully", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                               Navigator.pushReplacement(
                                   context,
                                   PageRouteBuilder(pageBuilder: (context, animation1, animation2) => AccountPage()));
                             }
-                            else{
+                            on Exception{
                               Toast.show("Can`t delete this transaction", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                             }
                           },
@@ -384,13 +385,14 @@ class PickAccountNamePage extends StatelessWidget{
                             padding: EdgeInsets.all(8.0),
                             splashColor: Colors.blueAccent,
                             onPressed: (){
-                              if(Global.instance.addAccount(myController.text, PickAccountCurrencyPage.chosenCurrency, PickAccountTypePage.chosenType)) {
+                              try{
+                                Global.instance.addAccount(myController.text, PickAccountCurrencyPage.chosenCurrency, PickAccountTypePage.chosenType);
                                 Toast.show("${myController.text}, ${Global.instance.recentCurrency.tag}", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               }
-                              else{
+                              on Exception{
                                 Toast.show("Please enter a valid name", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                               }
                             },

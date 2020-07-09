@@ -1,8 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:wheresmymoney_old_nav/Singleton/Global.dart';
-import 'package:wheresmymoney_old_nav/Models/Transaction.dart';
 
-import '../Singleton/DatabaseHandler.dart';
 class Currency
 {
   String _name;
@@ -77,7 +75,11 @@ class Currency
   }
 
   BigInt toMainCurrency(BigInt amount){
-    return BigInt.parse((Decimal.parse(amount.toString())/toMainRatio()).floor().toString())*Global.instance.mainCurrency.getDivision()~/getDivision();
+    return BigInt.parse((
+            Decimal.parse(amount.toString())/toMainRatio())
+        .floor().toString())
+        *Global.instance.mainCurrency.getDivision()
+        ~/getDivision();
   }
 
   bool isLinkedTo(Currency otherCurrency) {
@@ -96,27 +98,35 @@ class Currency
   }
 
   String toNaturalLanguage(BigInt amount){
-    if(amount<BigInt.from(0)){
+    if(amount<BigInt.from(0))
       return "-${toNaturalLanguage(amount*BigInt.from(-1))}";
-    }
 
     String result = "";
-    String amountString  = amount.toString();
     String recentDigit = "";
 
-    for(int recentPos = 1; recentPos<amountString.length; recentPos++) {
-      recentDigit = (amount%BigInt.from(10)).toString();
+    for(int recentPos = 1; recentPos<amount.toString().length; recentPos++) {
+      result = concatCommaIfNeeded(recentDigit, amount, recentPos, result);
       amount = amount~/BigInt.from(10);
-      if(recentPos == pointPosition) {
-        result = ",$recentDigit$result";
-      }
-      else {
-        result = "$recentDigit$result";
-      }
     }
 
     result = "$amount$result";
+    result = concatZeros(result);
+    result = "$result $tag";
+    return result;
+  }
 
+  String concatCommaIfNeeded(String recentDigit, BigInt amount, int recentPos, String result) {
+    recentDigit = (amount%BigInt.from(10)).toString();
+    if(recentPos == pointPosition) {
+      result = ",$recentDigit$result";
+    }
+    else {
+      result = "$recentDigit$result";
+    }
+    return result;
+  }
+
+  String concatZeros(String result) {
     if(result.length<pointPosition+2) {
       for(int i = result.length; i<pointPosition; i++) {
         result = "0$result";
@@ -126,7 +136,7 @@ class Currency
         result = "0,$result";
       }
     }
-    return "$result $tag";
+    return result;
   }
 
   BigInt getDivision() {

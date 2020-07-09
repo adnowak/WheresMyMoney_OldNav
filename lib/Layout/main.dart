@@ -137,13 +137,14 @@ class AccountsPage extends StatelessWidget {
                       color: Colors.red,
                       icon: Icons.delete,
                       onTap: () {
-                        if(Global.instance.deleteAccount(account)){
+                        try{
+                          Global.instance.deleteAccount(account);
                           Toast.show("Deleted succesfully", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                           Navigator.pushReplacement(
                               context,
                               PageRouteBuilder(pageBuilder: (context, animation1, animation2) => AccountsPage()));
                         }
-                        else{
+                        on Exception{
                           Toast.show("Can`t delete ${account.name}", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                         }
                       },
@@ -243,15 +244,16 @@ class CurrenciesPage extends StatelessWidget {
                           color: Colors.red,
                           icon: Icons.delete,
                           onTap: () {
-                            if(Global.instance.deleteCurrency(currency)){
-                              Toast.show("Deleted succesfully", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-                              Navigator.pushReplacement(
-                                  context,
-                                  PageRouteBuilder(pageBuilder: (context, animation1, animation2) => CurrenciesPage()));
-                            }
-                            else{
-                              Toast.show("Can`t delete ${currency.name}", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-                            }
+                              try{
+                                Global.instance.deleteCurrency(currency);
+                                Toast.show("Deleted succesfully", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                                Navigator.pushReplacement(
+                                    context,
+                                    PageRouteBuilder(pageBuilder: (context, animation1, animation2) => CurrenciesPage()));
+                              }
+                              on Exception{
+                                Toast.show("Can`t delete ${currency.name}", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                              }
                           },
                         ),
                       ],
@@ -400,11 +402,12 @@ class IncomePage extends StatelessWidget {
                     padding: EdgeInsets.all(8.0),
                     splashColor: Colors.blueAccent,
                     onPressed: (){
-                      if(Global.instance.addIncome("${myController.text}")) {
+                      try {
+                        Global.instance.addIncome("${myController.text}");
                         Toast.show("Income added", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                         Navigator.of(context).pop();
                       }
-                      else{
+                      on Exception{
                         Toast.show("Please enter a valid amount", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                       }
                     },
@@ -471,11 +474,12 @@ class EditBalancePage extends StatelessWidget {
                             padding: EdgeInsets.all(8.0),
                             splashColor: Colors.blueAccent,
                             onPressed: (){
-                              if(Global.instance.addSetting("${myController.text}")) {
+                              try{
+                                Global.instance.addSetting("${myController.text}");
                                 Toast.show("Balance edited", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                                 Navigator.of(context).pop();
                               }
-                              else{
+                              on Exception{
                                 Toast.show("Please enter a valid amount", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                               }
                             },
@@ -560,11 +564,12 @@ class ExpensePage extends StatelessWidget {
                             padding: EdgeInsets.all(8.0),
                             splashColor: Colors.blueAccent,
                             onPressed: (){
-                              if(Global.instance.addExpense("${myController.text}")) {
+                              try {
+                                Global.instance.addExpense("${myController.text}");
                                 Toast.show("Expense added", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                                 Navigator.of(context).pop();
                               }
-                              else{
+                              on Exception{
                                 Toast.show("Please enter a valid amount", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                               }
                             },
@@ -599,11 +604,11 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Text(
                       'Your balance:',
-                      style: Theme.of(context).textTheme.display1,
+                      style: Theme.of(context).textTheme.headline4,
                     ),
                     Text(
                       '${Global.instance.getBalanceToDisplay()}',
-                      style: Theme.of(context).textTheme.display1,
+                      style: Theme.of(context).textTheme.headline4,
                     ),
                   ],
                 ),

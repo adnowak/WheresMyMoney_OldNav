@@ -1,6 +1,5 @@
 import 'package:decimal/decimal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toast/toast.dart';
 
 import '../Models/API.dart';
 import '../Models/APIRequest.dart';
@@ -122,7 +121,7 @@ class Global
     _initiated = true;
   }
 
-  void addAllBaseCurrencies(){
+  void initiateCurreciesDefaultSettings(){
     Currency euro = Currency(null, Decimal.parse("1.0"), "EUR", "Euro", 2);
     euro.link = euro;
     _currenciesList = List<Currency>();
@@ -130,6 +129,11 @@ class Global
     _recentCurrency = euro;
     _mainCurrency = euro;
     _rootCurrency = euro;
+  }
+
+
+  void addAllBaseCurrencies(){
+    initiateCurreciesDefaultSettings();
 
     _currenciesList.add(Currency(_rootCurrency, Decimal.parse("1.0"), "AED", "United Arab Emirates dirham", 2));
     _currenciesList.add(Currency(_rootCurrency, Decimal.parse("1.0"), "AFN", "Afghan afghani", 2));
@@ -304,23 +308,19 @@ class Global
 
   Future<String> getMainCurrencyPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     return prefs.getString(_mainCurrencyPrefs);
   }
 
   Future<bool> setMainCurrencyPrefs(Currency currency) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     return prefs.setString(_mainCurrencyPrefs, currency.tag);
   }
 
   BigInt getBalance(){
     BigInt balance = BigInt.from(0);
-    if(_accountsList!=null){
-      for(final account in _accountsList){
+    if(_accountsList!=null)
+      for(final account in _accountsList)
         balance += account.currency.toMainCurrency(account.balance);
-      }
-    }
     return balance;
   }
 
@@ -328,157 +328,113 @@ class Global
     return mainCurrency.toNaturalLanguage(getBalance());
   }
 
+  String translateAmountString(String amountStringWithComma){
+    String amountString = "";
+    if(amountString.contains(",")){
+      String full = amountString.split(",")[0];
+      String parts = amountString.split(",")[1];
+      amountString = "$full.$parts";
+    }
+    return amountString;
+  }
 
-  //returns if execution went fine
-  bool addIncome(String amountString){
-    try{
-      if(amountString.contains(",")){
-        String full = amountString.split(",")[0];
-        String parts = amountString.split(",")[1];
-        amountString = "$full.$parts";
-      }
-      BigInt amount = BigInt.parse((Decimal.parse(amountString)*Decimal.parse(recentAccount.currency.getDivision().toString())).toString());
+  BigInt countTransactionAmountFromAmountString(String amountString){
+    return BigInt.parse((Decimal.parse(amountString)*Decimal.parse(recentAccount.currency.getDivision().toString())).toString());
+  }
+
+  void addTransaction(Transaction transaction){
+    _transactionsList.add(transaction);
+    DatabaseHandler.instance.insertTransaction(transaction);
+  }
+
+  void addIncome(String amountString){
+      amountString = translateAmountString(amountString);
+      BigInt amount = countTransactionAmountFromAmountString(amountString);
       if(amount<BigInt.from(0))throw Exception();
       Income newIncome = Income(_transactionsList.length, amount, recentAccount);
-      _transactionsList.add(newIncome);
-      DatabaseHandler.instance.insertTransaction(newIncome);
-      return true;
-    }
-    on Exception {
-      return false;
-    }
+
+      addTransaction(newIncome);
   }
 
-  //returns if execution went fine
-  bool addExpense(String amountString){
-    try{
-      if(amountString.contains(",")){
-        String full = amountString.split(",")[0];
-        String parts = amountString.split(",")[1];
-        amountString = "$full.$parts";
-      }
-      BigInt amount = BigInt.parse((Decimal.parse(amountString)*Decimal.parse(recentAccount.currency.getDivision().toString())).toString());
+  void addExpense(String amountString){
+      amountString = translateAmountString(amountString);
+      BigInt amount = countTransactionAmountFromAmountString(amountString);
       if(amount<BigInt.from(0))throw Exception();
       Expense newExpense = Expense(_transactionsList.length, amount, recentAccount);
-      _transactionsList.add(newExpense);
-      DatabaseHandler.instance.insertTransaction(newExpense);
-      return true;
-    }
-    on Exception {
-      return false;
-    }
+
+      addTransaction(newExpense);
   }
 
-  //returns if execution went fine
-  bool addSetting(String amountString){
-    try{
-      if(amountString.contains(",")){
-        String full = amountString.split(",")[0];
-        String parts = amountString.split(",")[1];
-        amountString = "$full.$parts";
-      }
-      BigInt amount = BigInt.parse((Decimal.parse(amountString)*Decimal.parse(recentAccount.currency.getDivision().toString())).toString());
+  void addSetting(String amountString){
+      amountString = translateAmountString(amountString);
+      BigInt amount = countTransactionAmountFromAmountString(amountString);
       Setting newSetting = Setting(_transactionsList.length, amount, recentAccount);
-      _transactionsList.add(newSetting);
-      DatabaseHandler.instance.insertTransaction(newSetting);
-      return true;
-    }
-    on Exception {
-      return false;
-    }
+
+      addTransaction(newSetting);
   }
 
-  //returns if execution went fine
-  bool addAccount(String accountName, Currency accountCurrency, String accountType){
+  void addAccount(String accountName, Currency accountCurrency, String accountType){
     if(accountName!=null && accountName!=""){
       Account newAccount = Account(accountName, accountCurrency, accountType);
       _accountsList.add(newAccount);
       DatabaseHandler.instance.insertAccount(newAccount);
-      return true;
     }
     else{
-      return false;
+      throw Exception();
     }
   }
 
-  //returns if execution went fine
-  bool addCurrency(String currencyName, String currencyTag, String currencyToLinkRatio, String currencyPointPosition, Currency currencyLink ){
+  void addCurrency(String currencyName, String currencyTag, String currencyToLinkRatio, String currencyPointPosition, Currency currencyLink ){
     if(currencyName!=null&&currencyTag!=null&&currencyPointPosition!=null&&currencyToLinkRatio!=null&&"$currencyName$currencyTag$currencyToLinkRatio$currencyPointPosition"!=""){
-      try {
-        if(currencyToLinkRatio.contains(",")){
-          String full = currencyToLinkRatio.split(",")[0];
-          String parts = currencyToLinkRatio.split(",")[1];
-          currencyToLinkRatio = "$full.$parts";
-        }
+        currencyToLinkRatio = translateAmountString(currencyToLinkRatio);
+
         Currency newCurency = Currency(
             currencyLink, Decimal.parse(currencyToLinkRatio), currencyTag,
             currencyName, BigInt.parse(currencyPointPosition).toInt());
         _currenciesList.add(newCurency);
         DatabaseHandler.instance.insertCurrency(newCurency);
-        return true;
-      }
-      on Exception{
-        return false;
-      }
     }
     else{
-      return false;
+      throw Exception();
     }
   }
 
-
-    //returns if execution went fine
-  bool deleteTransaction(Transaction transactionToDelete){
-    try{
+  void deleteTransaction(Transaction transactionToDelete){
       transactionToDelete.transactionAccount.transactionsList.remove(transactionToDelete);
       transactionToDelete.transactionAccount.countBalance();
       DatabaseHandler.instance.deleteTransaction(transactionToDelete.IdT);
-      return true;
-    }
-    on Exception{
-      return false;
-    }
   }
 
-  //returns if execution went fine
-  bool deleteAccount(Account accountToDelete){
-    try{
+  void deleteAccount(Account accountToDelete){
       Global.instance.accountsList.remove(accountToDelete);
       for(int i =0; i<accountToDelete.transactionsList.length; i++){
         accountToDelete.transactionsList.remove(accountToDelete);
         DatabaseHandler.instance.deleteTransaction(accountToDelete.transactionsList[i].IdT);
       }
       DatabaseHandler.instance.deleteAccount(accountToDelete.IdA);
-      return true;
-    }
-    on Exception{
-      return false;
-    }
   }
 
-  //returns if execution went fine
-  bool deleteCurrency(Currency currencyToDelete){
-    try{
+  void deleteCurrency(Currency currencyToDelete){
       for(int i =0; i<accountsList.length; i++){
         if(accountsList[i].currency==currencyToDelete){
-          return false;
+          throw Exception();
         }
       }
 
       for(int i =0; i<baseCurrenciesTags.length; i++){
         if(baseCurrenciesTags[i] == currencyToDelete.tag){
-          return false;
+          throw Exception();
         }
       }
 
       for(int i=0; i<currenciesList.length; i++){
         if(currenciesList[i]!=currencyToDelete && currenciesList[i].isLinkedTo(currencyToDelete)){
-          return false;
+          throw Exception();
         }
       }
 
       if(currencyToDelete == rootCurrency || currencyToDelete == mainCurrency){
-        return false;
+        throw Exception();
       }
 
       if(currencyToDelete == recentCurrency){
@@ -487,23 +443,18 @@ class Global
 
       currenciesList.remove(currencyToDelete);
       DatabaseHandler.instance.deleteCurrency(currencyToDelete.tag);
-      return true;
-    }
-    on Exception{
-      return false;
-    }
   }
 
-  //returns if execution went fine
-  bool editCurrency(Currency currencyToEdit, String newName, String newTag, String newLinkRatio, String newPointPosition, Currency newLink){
+  
+  void editCurrency(Currency currencyToEdit, String newName, String newTag, String newLinkRatio, String newPointPosition, Currency newLink){
     try{
       if(newLink == currencyToEdit){
-        return false;
+        throw Exception();
       }
 
       if(currencyToEdit == rootCurrency){
         if(newName!=currencyToEdit.name||newTag!=currencyToEdit.tag||Decimal.parse(newLinkRatio)!=Decimal.parse("1")||newLink!=currencyToEdit){
-          return false;
+          throw Exception();
         }
       }
 
@@ -538,10 +489,9 @@ class Global
       }
 
       DatabaseHandler.instance.updateCurrency(currencyToEdit);
-      return true;
     }
     on Exception{
-      return false;
+      throw Exception();
     }
   }
 

@@ -521,18 +521,20 @@ class PickCurrencyPointPositionPage extends StatelessWidget{
                         splashColor: Colors.blueAccent,
                         onPressed: (){
                           if(Global.instance.editing){
-                            if(Global.instance.editCurrency(Global.instance.recentCurrency, PickCurrencyNamePage.name, PickCurrencyTagPage.tag, PickCurrencyLinkRatioPage.linkRatio, chosenOption, PickCurrencyLinkPage.chosenCurrency)) {
+                            try {
+                              Global.instance.editCurrency(Global.instance.recentCurrency, PickCurrencyNamePage.name, PickCurrencyTagPage.tag, PickCurrencyLinkRatioPage.linkRatio, chosenOption, PickCurrencyLinkPage.chosenCurrency);
                               Toast.show("Currency edited", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                             }
-                            else{
+                            on Exception{
                               Toast.show("Please enter valid data", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                             }
                           }
                           else{
-                            if(Global.instance.addCurrency(PickCurrencyNamePage.name, PickCurrencyTagPage.tag, PickCurrencyLinkRatioPage.linkRatio, chosenOption, PickCurrencyLinkPage.chosenCurrency)) {
+                            try {
+                              Global.instance.addCurrency(PickCurrencyNamePage.name, PickCurrencyTagPage.tag, PickCurrencyLinkRatioPage.linkRatio, chosenOption, PickCurrencyLinkPage.chosenCurrency);
                               Toast.show("Currency added", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                             }
-                            else{
+                            on Exception{
                               Toast.show("Please enter valid data", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
                             }
                           }
